@@ -128,6 +128,7 @@
     "deploy-s3": "gulp deploy-s3",
     "deploy-status": "gulp deploy-status",
     "deploy-set-version": "gulp deploy-set-version",
+    "deploy-mti":"npm run release && node deploy.cjs && deploy.sh",
     "prettier": "prettier --write \"**/*\"",
     "prettier-check": "prettier --check \"**/*\"",
     "pretty-quick": "pretty-quick"
