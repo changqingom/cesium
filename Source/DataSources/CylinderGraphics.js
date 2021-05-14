@@ -60,6 +60,7 @@ function CylinderGraphics(options) {
   this._numberOfVerticalLines = undefined;
   this._numberOfVerticalLinesSubscription = undefined;
   this._slices = undefined;
+  this._showBottom = undefined;
   this._slicesSubscription = undefined;
   this._shadows = undefined;
   this._shadowsSubscription = undefined;
@@ -193,6 +194,7 @@ Object.defineProperties(CylinderGraphics.prototype, {
   distanceDisplayCondition: createPropertyDescriptor(
     "distanceDisplayCondition"
   ),
+  showBottom: createPropertyDescriptor("showBottom"),
 });
 
 /**
@@ -217,6 +219,7 @@ CylinderGraphics.prototype.clone = function (result) {
   result.outlineWidth = this.outlineWidth;
   result.numberOfVerticalLines = this.numberOfVerticalLines;
   result.slices = this.slices;
+  result.showBottom = this.showBottom;
   result.shadows = this.shadows;
   result.distanceDisplayCondition = this.distanceDisplayCondition;
   return result;
@@ -253,6 +256,7 @@ CylinderGraphics.prototype.merge = function (source) {
     source.numberOfVerticalLines
   );
   this.slices = defaultValue(this.slices, source.slices);
+  this.showBottom = defaultValue(this.showBottom, source.showBottom);
   this.shadows = defaultValue(this.shadows, source.shadows);
   this.distanceDisplayCondition = defaultValue(
     this.distanceDisplayCondition,

@@ -89,6 +89,7 @@ function CylinderGeometry(options) {
   this._slices = slices;
   this._offsetAttribute = options.offsetAttribute;
   this._workerName = "createCylinderGeometry";
+  this._showBottom = defaultValue(options.showBottom, 1);
 }
 
 /**
@@ -125,6 +126,7 @@ CylinderGeometry.pack = function (value, array, startingIndex) {
   array[startingIndex++] = value._topRadius;
   array[startingIndex++] = value._bottomRadius;
   array[startingIndex++] = value._slices;
+  array[startingIndex++] = value._showBottom;
   array[startingIndex] = defaultValue(value._offsetAttribute, -1);
 
   return array;
@@ -138,6 +140,7 @@ var scratchOptions = {
   bottomRadius: undefined,
   slices: undefined,
   offsetAttribute: undefined,
+  showBottom: undefined,
 };
 
 /**
@@ -168,6 +171,7 @@ CylinderGeometry.unpack = function (array, startingIndex, result) {
   var topRadius = array[startingIndex++];
   var bottomRadius = array[startingIndex++];
   var slices = array[startingIndex++];
+  var showBottom = array[startingIndex++];
   var offsetAttribute = array[startingIndex];
 
   if (!defined(result)) {
@@ -175,6 +179,7 @@ CylinderGeometry.unpack = function (array, startingIndex, result) {
     scratchOptions.topRadius = topRadius;
     scratchOptions.bottomRadius = bottomRadius;
     scratchOptions.slices = slices;
+    scratchOptions.showBottom = showBottom;
     scratchOptions.offsetAttribute =
       offsetAttribute === -1 ? undefined : offsetAttribute;
     return new CylinderGeometry(scratchOptions);
@@ -185,6 +190,7 @@ CylinderGeometry.unpack = function (array, startingIndex, result) {
   result._topRadius = topRadius;
   result._bottomRadius = bottomRadius;
   result._slices = slices;
+  result._showBottom = showBottom;
   result._offsetAttribute =
     offsetAttribute === -1 ? undefined : offsetAttribute;
 
@@ -203,6 +209,7 @@ CylinderGeometry.createGeometry = function (cylinderGeometry) {
   var bottomRadius = cylinderGeometry._bottomRadius;
   var vertexFormat = cylinderGeometry._vertexFormat;
   var slices = cylinderGeometry._slices;
+  var showBottom = cylinderGeometry._showBottom;
 
   if (
     length <= 0 ||
@@ -378,9 +385,14 @@ CylinderGeometry.createGeometry = function (cylinderGeometry) {
   if (vertexFormat.st) {
     var rad = Math.max(topRadius, bottomRadius);
     for (i = 0; i < numVertices; i++) {
-      var position = Cartesian3.fromArray(positions, i * 3, positionScratch);
-      st[textureCoordIndex++] = (position.x + rad) / (2.0 * rad);
-      st[textureCoordIndex++] = (position.y + rad) / (2.0 * rad);
+      if (!(showBottom === 1) && i >= twoSlices && i < slices * 3) {
+        st[textureCoordIndex++] = 10;
+        st[textureCoordIndex++] = 10;
+      } else {
+        var position = Cartesian3.fromArray(positions, i * 3, positionScratch);
+        st[textureCoordIndex++] = (position.x + rad) / (2.0 * rad);
+        st[textureCoordIndex++] = (position.y + rad) / (2.0 * rad);
+      }
     }
   }
 

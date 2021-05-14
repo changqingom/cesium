@@ -34,6 +34,7 @@ function CylinderGeometryOptions(entity) {
   this.topRadius = undefined;
   this.bottomRadius = undefined;
   this.slices = undefined;
+  this.showBottom = undefined;
   this.numberOfVerticalLines = undefined;
   this.offsetAttribute = undefined;
 }
@@ -255,6 +256,7 @@ CylinderGeometryUpdater.prototype._isDynamic = function (entity, cylinder) {
     !cylinder.topRadius.isConstant || //
     !cylinder.bottomRadius.isConstant || //
     !Property.isConstant(cylinder.slices) || //
+    !Property.isConstant(cylinder.showBottom) || //
     !Property.isConstant(cylinder.outlineWidth) || //
     !Property.isConstant(cylinder.numberOfVerticalLines)
   );
@@ -279,6 +281,10 @@ CylinderGeometryUpdater.prototype._setStaticOptions = function (
   options.bottomRadius = cylinder.bottomRadius.getValue(Iso8601.MINIMUM_VALUE);
   options.slices = Property.getValueOrUndefined(
     cylinder.slices,
+    Iso8601.MINIMUM_VALUE
+  );
+  options.showBottom = Property.getValueOrUndefined(
+    cylinder.showBottom,
     Iso8601.MINIMUM_VALUE
   );
   options.numberOfVerticalLines = Property.getValueOrUndefined(
@@ -361,6 +367,7 @@ DynamicCylinderGeometryUpdater.prototype._setOptions = function (
     time
   );
   options.slices = Property.getValueOrUndefined(cylinder.slices, time);
+  options.showBottom = Property.getValueOrDefault(cylinder.showBottom, time, 1);
   options.numberOfVerticalLines = Property.getValueOrUndefined(
     cylinder.numberOfVerticalLines,
     time
